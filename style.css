@@ -246,11 +246,16 @@ main {
 /* =========================================================
    Cropper wrapper
    ========================================================= */
+.cropper-outer {
+  padding: 1em 0;
+  background: #0d0d1a;
+  border-radius: 8px;
+}
+
 .cropper-wrapper {
   max-height: 450px;
   background: #1a1a2e;
-  border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .cropper-wrapper img {

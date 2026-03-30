@@ -59,8 +59,10 @@
       <section class="section" aria-labelledby="editor-heading">
         <h2 id="editor-heading">Image Editor</h2>
         <p class="section-note">The editor shows the raw image (EXIF orientation is ignored). Crop the selection and use the buttons to rotate or flip.</p>
-        <div class="cropper-wrapper">
-          <img id="cropperImage" alt="Image for editing">
+        <div class="cropper-outer">
+          <div class="cropper-wrapper">
+            <img id="cropperImage" alt="Image for editing">
+          </div>
         </div>
         <div class="editor-controls" role="toolbar" aria-label="Image editing controls">
           <button type="button" id="rotateCCW" title="Rotate 90° counter-clockwise">
