@@ -65,7 +65,7 @@ header h1 {
 .intro {
   max-width: 960px;
   width: 100%;
-  margin: 1.75rem auto .25rem;
+  margin: 1.75rem auto 0;
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
@@ -83,6 +83,10 @@ header h1 {
   font-size: .95rem;
   color: var(--clr-muted);
   line-height: 1.65;
+}
+
+.intro.section {
+  padding: 1.5rem;
 }
 
 /* =========================================================
