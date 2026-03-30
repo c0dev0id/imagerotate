@@ -254,8 +254,14 @@ main {
 
 .cropper-wrapper {
   max-height: 450px;
-  background: #1a1a2e;
+  background: #0d0d1a;
   overflow: visible;
+}
+
+/* The canvas is sized to the actual image — use a distinct background
+   so the image boundary is always visible regardless of aspect ratio */
+.cropper-canvas {
+  background: #1a1a2e;
 }
 
 .cropper-wrapper img {
