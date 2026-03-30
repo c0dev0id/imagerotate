@@ -306,9 +306,39 @@ main {
 }
 
 /* =========================================================
+   Cropper drag handle overrides — larger, easier to grab
+   ========================================================= */
+.cropper-point {
+  background-color: #39f;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  opacity: 1;
+  width: 12px;
+  height: 12px;
+}
+.cropper-point.point-n  { top: -6px; margin-left: -6px; width: 28px; height: 12px; }
+.cropper-point.point-s  { bottom: -6px; margin-left: -6px; width: 28px; height: 12px; }
+.cropper-point.point-e  { right: -6px; margin-top: -14px; width: 12px; height: 28px; }
+.cropper-point.point-w  { left: -6px; margin-top: -14px; width: 12px; height: 28px; }
+.cropper-point.point-nw { top: -6px; left: -6px; }
+.cropper-point.point-ne { top: -6px; right: -6px; }
+.cropper-point.point-sw { bottom: -6px; left: -6px; }
+.cropper-point.point-se { bottom: -6px; right: -6px; width: 12px; height: 12px; }
+@media (min-width: 768px)  { .cropper-point.point-se { width: 12px; height: 12px; } }
+@media (min-width: 992px)  { .cropper-point.point-se { width: 12px; height: 12px; } }
+@media (min-width: 1200px) { .cropper-point.point-se { width: 12px; height: 12px; } }
+
+/* =========================================================
    Download section
    ========================================================= */
-.download-section h2 { margin-bottom: 1.25rem; }
+.download-section h2 { margin-bottom: .6rem; }
+
+.download-info {
+  font-size: .85rem;
+  color: var(--clr-muted);
+  margin-bottom: 1.25rem;
+  max-width: 480px;
+}
 
 .options-col {
   display: flex;
