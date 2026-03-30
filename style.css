@@ -269,16 +269,21 @@ main {
   background: #dce2fd;
 }
 
+.editor-controls button.active {
+  background: #eef1ff;
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+
 /* =========================================================
    Download section
    ========================================================= */
 .download-section h2 { margin-bottom: 1.25rem; }
 
-.options-row {
+.options-col {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 1.25rem;
-  align-items: flex-end;
   margin-bottom: 1.25rem;
 }
 
@@ -286,7 +291,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: .35rem;
-  min-width: 180px;
+  max-width: 480px;
 }
 
 .option-group label {
@@ -314,9 +319,34 @@ main {
   box-shadow: 0 0 0 3px rgba(79,110,247,.15);
 }
 
-.input-hint {
-  font-size: .78rem;
-  color: var(--clr-muted);
+.input-with-btn {
+  display: flex;
+  gap: .5rem;
+  align-items: stretch;
+}
+
+.input-with-btn input[type="number"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-secondary {
+  padding: .45rem .85rem;
+  border: 1px solid var(--clr-border);
+  border-radius: 8px;
+  background: var(--clr-surface);
+  color: var(--clr-text);
+  font-size: .82rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.btn-secondary:hover {
+  background: #eef1ff;
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
 }
 
 .btn-download {
