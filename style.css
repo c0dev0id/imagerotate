@@ -60,6 +60,32 @@ header h1 {
 }
 
 /* =========================================================
+   Intro block
+   ========================================================= */
+.intro {
+  max-width: 960px;
+  width: 100%;
+  margin: 1.75rem auto .25rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.intro-headline {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  line-height: 1.4;
+}
+
+.intro p {
+  font-size: .95rem;
+  color: var(--clr-muted);
+  line-height: 1.65;
+}
+
+/* =========================================================
    Main
    ========================================================= */
 main {
