@@ -247,7 +247,7 @@ main {
    Cropper wrapper
    ========================================================= */
 .cropper-outer {
-  padding: 1em 0;
+  padding: 1em;
   background: #0d0d1a;
   border-radius: 8px;
 }
