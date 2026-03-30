@@ -5,6 +5,8 @@
   var cropper = null;
   var originalMimeType = 'image/jpeg';
   var dataUrl = null;
+  var imageNaturalWidth = 0;
+  var imageNaturalHeight = 0;
 
   /* -------------------------------------------------------
      EXIF orientation reader (JPEG only)
@@ -78,6 +80,26 @@
   };
 
   /* -------------------------------------------------------
+     Compute longest edge of the current crop in natural
+     image pixels and update the input field.
+  ------------------------------------------------------- */
+  function updateLongestEdge() {
+    if (!cropper) return;
+    var data = cropper.getData();
+    var imgData = cropper.getImageData();
+    // getData() returns coordinates in canvas-pixel space;
+    // scale up to natural image pixels.
+    var scaleX = imgData.naturalWidth  / imgData.width;
+    var scaleY = imgData.naturalHeight / imgData.height;
+    var w = Math.round(data.width  * scaleX);
+    var h = Math.round(data.height * scaleY);
+    var longest = Math.max(w, h);
+    if (longest > 0) {
+      document.getElementById('longestEdge').value = longest;
+    }
+  }
+
+  /* -------------------------------------------------------
      Initialise / re-initialise Cropper.js
   ------------------------------------------------------- */
   function initCropper(src) {
@@ -98,13 +120,15 @@
       // Do NOT let Cropper.js auto-correct EXIF orientation –
       // the editor intentionally shows the raw (un-oriented) image.
       checkOrientation: false,
-      crop: function (event) {
-        var w = Math.round(event.detail.width);
-        var h = Math.round(event.detail.height);
-        var longest = Math.max(w, h);
-        if (longest > 0) {
-          document.getElementById('longestEdge').value = longest;
-        }
+      ready: function () {
+        var imgData = cropper.getImageData();
+        imageNaturalWidth  = imgData.naturalWidth;
+        imageNaturalHeight = imgData.naturalHeight;
+        // Set initial longest-edge value from actual natural image dimensions
+        updateLongestEdge();
+      },
+      crop: function () {
+        updateLongestEdge();
       },
     });
   }
@@ -212,14 +236,17 @@
      Boot
   ------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
-    var imageInput   = document.getElementById('imageInput');
-    var uploadArea   = document.getElementById('uploadArea');
-    var rotateCCW    = document.getElementById('rotateCCW');
-    var rotateCW     = document.getElementById('rotateCW');
-    var flipH        = document.getElementById('flipH');
-    var flipV        = document.getElementById('flipV');
-    var resetCrop    = document.getElementById('resetCrop');
-    var downloadBtn  = document.getElementById('downloadBtn');
+    var imageInput        = document.getElementById('imageInput');
+    var uploadArea        = document.getElementById('uploadArea');
+    var rotateCCW         = document.getElementById('rotateCCW');
+    var rotateCW          = document.getElementById('rotateCW');
+    var flipH             = document.getElementById('flipH');
+    var flipV             = document.getElementById('flipV');
+    var resetCrop         = document.getElementById('resetCrop');
+    var downloadBtn       = document.getElementById('downloadBtn');
+    var resetLongestEdge  = document.getElementById('resetLongestEdge');
+    var aspectOriginalBtn = document.getElementById('aspectOriginal');
+    var aspect1x1Btn      = document.getElementById('aspect1x1');
 
     imageInput.addEventListener('change', function (e) {
       handleFile(e.target.files[0]);
@@ -243,7 +270,40 @@
       cropper.scaleY(-(data.scaleY || 1));
     });
     resetCrop.addEventListener('click', function () {
-      if (cropper) cropper.reset();
+      if (!cropper) return;
+      cropper.reset();
+      cropper.setAspectRatio(NaN);
+      aspectOriginalBtn.classList.remove('active');
+      aspect1x1Btn.classList.remove('active');
+    });
+
+    // Aspect ratio buttons
+    aspectOriginalBtn.addEventListener('click', function () {
+      if (!cropper) return;
+      if (aspectOriginalBtn.classList.contains('active')) {
+        cropper.setAspectRatio(NaN);
+        aspectOriginalBtn.classList.remove('active');
+      } else {
+        cropper.setAspectRatio(imageNaturalWidth / imageNaturalHeight);
+        aspectOriginalBtn.classList.add('active');
+        aspect1x1Btn.classList.remove('active');
+      }
+    });
+    aspect1x1Btn.addEventListener('click', function () {
+      if (!cropper) return;
+      if (aspect1x1Btn.classList.contains('active')) {
+        cropper.setAspectRatio(NaN);
+        aspect1x1Btn.classList.remove('active');
+      } else {
+        cropper.setAspectRatio(1);
+        aspect1x1Btn.classList.add('active');
+        aspectOriginalBtn.classList.remove('active');
+      }
+    });
+
+    // Reset longest-edge input to natural crop size
+    resetLongestEdge.addEventListener('click', function () {
+      updateLongestEdge();
     });
 
     downloadBtn.addEventListener('click', downloadImage);
