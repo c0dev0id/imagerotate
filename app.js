@@ -4,6 +4,7 @@
   /** @type {Cropper|null} */
   var cropper = null;
   var originalMimeType = 'image/jpeg';
+  var originalFileName = '';
   var dataUrl = null;
   var imageNaturalWidth = 0;
   var imageNaturalHeight = 0;
@@ -144,6 +145,7 @@
     }
 
     originalMimeType = file.type;
+    originalFileName = file.name;
 
     var reader = new FileReader();
     reader.onload = function (evt) {
@@ -223,8 +225,9 @@
     canvas.toBlob(function (blob) {
       var url = URL.createObjectURL(blob);
       var a   = document.createElement('a');
+      var baseName = originalFileName.replace(/\.[^.]+$/, '') || 'image';
       a.href     = url;
-      a.download = 'image_fixed.' + ext;
+      a.download = baseName + '_noexif.' + ext;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
