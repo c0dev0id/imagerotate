@@ -1,0 +1,24 @@
+{
+  "name": "imagerotate",
+  "version": "1.0.0",
+  "description": "A javascript only tool that can fix your images",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c0dev0id/imagerotate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/c0dev0id/imagerotate/issues"
+  },
+  "homepage": "https://github.com/c0dev0id/imagerotate#readme",
+  "dependencies": {
+    "cropperjs": "^1.6.1"
+  }
+}

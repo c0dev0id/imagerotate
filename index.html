@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ImageRotate – EXIF Orientation Fixer</title>
+  <link rel="stylesheet" href="vendor/cropper.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>ImageRotate</h1>
+    <p class="tagline">Fix EXIF orientation issues in your JPG and PNG images — no upload, no server.</p>
+  </header>
+
+  <main>
+    <section class="upload-section" id="uploadArea">
+      <label class="upload-label" for="imageInput">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 16 12 12 8 16"></polyline>
+          <line x1="12" y1="12" x2="12" y2="21"></line>
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+        </svg>
+        <span class="upload-text">Click to choose an image, or drag &amp; drop here</span>
+        <span class="upload-hint">JPG or PNG · processed locally, never uploaded</span>
+        <input type="file" id="imageInput" accept="image/jpeg,image/png" aria-label="Choose image file">
+      </label>
+    </section>
+
+    <div id="mainContent" class="hidden">
+
+      <!-- Side-by-side previews -->
+      <section class="section" aria-labelledby="preview-heading">
+        <h2 id="preview-heading">Preview</h2>
+        <div class="preview-row">
+          <div class="preview-card">
+            <h3>With EXIF rotation applied</h3>
+            <div class="preview-frame">
+              <img id="previewExif" alt="Preview with EXIF orientation applied" class="preview-img exif-on">
+            </div>
+          </div>
+          <div class="preview-card">
+            <h3>Without EXIF rotation (raw)</h3>
+            <div class="preview-frame">
+              <img id="previewRaw" alt="Preview without EXIF orientation (raw)" class="preview-img exif-off">
+            </div>
+          </div>
+        </div>
+        <p class="exif-badge" id="exifBadge" aria-live="polite"></p>
+      </section>
+
+      <!-- Image editor -->
+      <section class="section" aria-labelledby="editor-heading">
+        <h2 id="editor-heading">Image Editor</h2>
+        <p class="section-note">The editor shows the raw image (EXIF orientation is ignored). Crop the selection and use the buttons to rotate or flip.</p>
+        <div class="cropper-wrapper">
+          <img id="cropperImage" alt="Image for editing">
+        </div>
+        <div class="editor-controls" role="toolbar" aria-label="Image editing controls">
+          <button type="button" id="rotateCCW" title="Rotate 90° counter-clockwise">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 .49-5.46"></path></svg>
+            Rotate CCW
+          </button>
+          <button type="button" id="rotateCW" title="Rotate 90° clockwise">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-.49-5.46"></path></svg>
+            Rotate CW
+          </button>
+          <button type="button" id="flipH" title="Flip horizontally">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+            Flip H
+          </button>
+          <button type="button" id="flipV" title="Flip vertically">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 7 19 3 15 7"></polyline><path d="M13 21H11a4 4 0 0 1-4-4V3"></path><polyline points="1 17 5 21 9 17"></polyline><path d="M11 3h2a4 4 0 0 1 4 4v14"></path></svg>
+            Flip V
+          </button>
+          <button type="button" id="resetCrop" title="Reset all edits">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+            Reset
+          </button>
+        </div>
+      </section>
+
+      <!-- Download options -->
+      <section class="section download-section" aria-labelledby="download-heading">
+        <h2 id="download-heading">Download</h2>
+        <div class="options-row">
+          <div class="option-group">
+            <label for="longestEdge">Longest edge (px)</label>
+            <input type="number" id="longestEdge" min="1" max="20000" step="1" placeholder="e.g. 1920" aria-describedby="longestEdgeHint">
+            <span class="input-hint" id="longestEdgeHint">Leave blank to keep original crop size</span>
+          </div>
+          <div class="option-group">
+            <label for="outputFormat">Output format</label>
+            <select id="outputFormat">
+              <option value="original">Original</option>
+              <option value="image/jpeg">JPG</option>
+              <option value="image/png">PNG</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" id="downloadBtn" class="btn-download">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download fixed image
+        </button>
+      </section>
+
+    </div><!-- /#mainContent -->
+  </main>
+
+  <footer>
+    <p>All processing happens in your browser. No image data is ever sent to a server.</p>
+  </footer>
+
+  <script src="vendor/cropper.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
