@@ -258,8 +258,16 @@ main {
   overflow: visible;
 }
 
-/* The canvas is sized to the actual image — use a distinct background
-   so the image boundary is always visible regardless of aspect ratio */
+/* Cropper.js adds .cropper-bg (checkerboard) to .cropper-container.
+   Override it with our "outside image" color so no checkerboard shows
+   in the space beside a portrait/landscape image canvas. */
+.cropper-bg {
+  background-image: none;
+  background-color: #0d0d1a;
+}
+
+/* .cropper-canvas is sized to the actual image by Cropper.js.
+   Give it the distinct "inside image" color so the boundary is visible. */
 .cropper-canvas {
   background: #1a1a2e;
 }
